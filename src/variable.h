@@ -42,13 +42,13 @@ struct hari
 } pembaca, satuminggu;
 
 byte sensorInt = 0;
-float konstanta = 4.5; // konstanta flow meter
+float konstanta = 7.5; // konstanta flow meter
 volatile byte pulseCount;
 float debit;
 unsigned int flowmlt;
 unsigned long oldTime;
 
-char auth[] = "vIMDGajmKf2p51TYRJpnjY3jdM7GqKDQ";
+char auth[] = "E7VmvS18KPZnvlPlIBRAIOqCeh_QoOD2";
 char ssid[] = "andri";
 char pass[] = "";
 char server[] = "iot.serangkota.go.id";
