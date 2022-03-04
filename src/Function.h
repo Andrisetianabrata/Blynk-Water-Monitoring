@@ -50,35 +50,44 @@ void initialize()
   seting_ultrasonic(BakCadangan.trig, BakCadangan.echo);
 }
 
+void konversi()
+{
+  BakMandi.minimal = 150;   // dalam centimeter
+  BakMandi.maksimal = 20;  // dalam centimeter
+  BakMandi.persenMinimal = 10;
+  BakMandi.persenMaksimal = 80;
+  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+
+  BakUtama.minimal = 70;   // dalam centimeter
+  BakUtama.maksimal = 10;  // dalam centimeter
+  BakUtama.persenMinimal = 10;
+  BakUtama.persenMaksimal = 80;
+  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+
+  BakCadangan.minimal = 70;   // dalam centimeter
+  BakCadangan.maksimal = 10;  // dalam centimeter
+  BakCadangan.persenMinimal = 10;
+  BakCadangan.persenMaksimal = 80;
+  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+}
 
 void eventKamarMandi()
 {
-  BakMandi.minimal = 70;   // dalam persen
-  BakMandi.maksimal = 10;  // dalam persen
-  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
-
-  BakUtama.minimal = 70;   // dalam persen
-  BakUtama.maksimal = 10;  // dalam persen
-  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
-
-  BakCadangan.minimal = 70;   // dalam persen
-  BakCadangan.maksimal = 10;  // dalam persen
-  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
-
+  konversi();
   rainTriger = digitalRead(Rainsensor);
   
-  if (BakMandi.levelBak > 0 && BakMandi.levelBak < (BakMandi.maksimal + 2) && selenoid)
+  if (BakMandi.levelBak > 0 && BakMandi.levelBak < BakMandi.persenMaksimal && selenoid)
   {
     Blynk.notify("Bak Mandi Telah Terisi PENUH!"); // nyalakan notifikasi
   }
 
   if (!emergencyStop)
   {
-    if (BakUtama.levelBak > BakUtama.maksimal && (BakMandi.levelBak > BakMandi.minimal && BakMandi.levelBak < BakMandi.maksimal) && !rainTriger)
+    if (BakUtama.levelBak > BakUtama.persenMaksimal && (BakMandi.levelBak > BakMandi.persenMinimal && BakMandi.levelBak < BakMandi.persenMaksimal) && !rainTriger)
     {
       selenoid1 = true;
     }
-    else if (BakMandi.levelBak < BakMandi.minimal)
+    else if (BakMandi.levelBak < BakMandi.persenMinimal)
     {
       selenoid1 = false;
       if (BlynkSelenoidState)
