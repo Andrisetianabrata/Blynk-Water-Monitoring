@@ -37,17 +37,17 @@ void seting_ultrasonic(byte pintrig, byte pinecho)
 
 void initialize()
 {
-  ultrasonic1.trig = 12;
-  ultrasonic1.echo = 13;
-  ultrasonic2.trig = 27;
-  ultrasonic2.echo = 14;
-  ultrasonic3.trig = 25;
-  ultrasonic3.echo = 26;
+  BakMandi.trig = 12;
+  BakMandi.echo = 13;
+  BakUtama.trig = 27;
+  BakUtama.echo = 14;
+  BakCadangan.trig = 25;
+  BakCadangan.echo = 26;
   pinMode(Rainsensor, INPUT);
   pinMode(Selenoid_1, OUTPUT);
-  seting_ultrasonic(ultrasonic1.trig, ultrasonic1.echo);
-  seting_ultrasonic(ultrasonic2.trig, ultrasonic2.echo);
-  seting_ultrasonic(ultrasonic3.trig, ultrasonic3.echo);
+  seting_ultrasonic(BakMandi.trig, BakMandi.echo);
+  seting_ultrasonic(BakUtama.trig, BakUtama.echo);
+  seting_ultrasonic(BakCadangan.trig, BakCadangan.echo);
 }
 
 int penghitung(byte triger, byte echo)
@@ -65,23 +65,32 @@ int penghitung(byte triger, byte echo)
 
 void eventKamarMandi()
 {
-  BakMandi.minimal = 70; // dalam persen
-  BakMandi.maksimal = 10; // dalam persen
-  BakMandi.levelBak = BakMandi.penghitung(ultrasonic1.trig, ultrasonic1.echo);
-  
+  BakMandi.minimal = 70;   // dalam persen
+  BakMandi.maksimal = 10;  // dalam persen
+  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
+
+  BakUtama.minimal = 70;   // dalam persen
+  BakUtama.maksimal = 10;  // dalam persen
+  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
+
+  BakCadangan.minimal = 70;   // dalam persen
+  BakCadangan.maksimal = 10;  // dalam persen
+  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100
+
   rainTriger = digitalRead(Rainsensor);
-  if (levelBakMandi > 3 && levelBakMandi < 20 && selenoid)
+  
+  if (BakMandi.levelBak > 0 && BakMandi.levelBak < (BakMandi.maksimal + 2) && selenoid)
   {
-    Blynk.notify("Bak Mandi Telah Terisi PENUH!");
+    Blynk.notify("Bak Mandi Telah Terisi PENUH!"); // nyalakan notifikasi
   }
 
   if (!emergencyStop)
   {
-    if (BakUtama.levelBak < 80 && (BakMandi.levelBak > 80 && BakMandi.levelBak < 500) && !rainTriger)
+    if (BakUtama.levelBak > BakUtama.maksimal && (BakMandi.levelBak > BakMandi.minimal && BakMandi.levelBak < BakMandi.maksimal) && !rainTriger)
     {
       selenoid1 = true;
     }
-    else if (levelBakMandi < 20)
+    else if (BakMandi.levelBak < BakMandi.minimal)
     {
       selenoid1 = false;
       if (BlynkSelenoidState)
@@ -131,9 +140,19 @@ void BlynkFunction()
   {
     SelenoidLED.off();
   }
-  Blynk.virtualWrite(V0, tulisUltrasonic(ultrasonic1.trig, ultrasonic1.echo));
-  Blynk.virtualWrite(V1, tulisUltrasonic(ultrasonic2.trig, ultrasonic2.echo));
-  Blynk.virtualWrite(V2, tulisUltrasonic(ultrasonic3.trig, ultrasonic3.echo));
+
+  if (rainTriger)
+  {
+    sensorHujan.on();
+  }
+  else
+  {
+    sensorHujan.off();
+  }
+  
+  Blynk.virtualWrite(V0, BakMandi.levelBak);
+  Blynk.virtualWrite(V1, BakUtama.levelBak);
+  Blynk.virtualWrite(V2, BakCadangan.levelBak);
   Blynk.virtualWrite(V3, pembaca.total / 1000.0);
   Blynk.virtualWrite(V7, debit);
   Blynk.virtualWrite(V8, 23);
@@ -249,42 +268,49 @@ void mulai_record()
   {
     pembaca.minggu = pembaca.total;
     // pembaca.total = 0
+    idIndex = 1;
   }
   else if (weekday() == 2 && mulaiJam)
   {
     pembaca.senin = pembaca.total;
     // pembaca.total = 0
+    idIndex = 2;
   }
   else if (weekday() == 3 && mulaiJam)
   {
     pembaca.selasa = pembaca.total;
     // pembaca.total = 0
+    idIndex = 3;
   }
   else if (weekday() == 4 && mulaiJam)
   {
     pembaca.rabu = pembaca.total;
     // pembaca.total = 0
+    idIndex = 4;
   }
   else if (weekday() == 5 && mulaiJam)
   {
     pembaca.kamis = pembaca.total;
     // pembaca.total = 0
+    idIndex = 5;
   }
   else if (weekday() == 6 && mulaiJam)
   {
     pembaca.jumat = pembaca.total;
     // pembaca.total = 0
+    idIndex = 6;
   }
   else if (weekday() == 7 && mulaiJam)
   {
     pembaca.sabtu = pembaca.total;
     // pembaca.total = 0
+    idIndex = 7;
   }
   
   if(millis() - tampilanMillis >= 1000)
   {
     tampilanMillis = millis();
-    Serial.printf("Level Bak: %d\nSelenoid: %d\nEmergency: %d\nSuhu: %d\nDebit: %d\nVolume: %d\n", levelBakMandi, mulaiJam, emergencyStop, 24, flowmlt, pembaca.total);
+    Serial.printf("Level Bak: %d\nSelenoid: %d\nEmergency: %d\nSuhu: %d\nDebit: %d\nVolume: %d\n", BakMandi.levelBak, mulaiJam, emergencyStop, 24, flowmlt, pembaca.total);
     Serial.printf("Blynk Selenoid: %d\n", BlynkSelenoidState);
     Serial.printf("jam: %2d:%2d:%2d Tanggal: %d/%d/%d Hari: %s\n\n", hour(), minute(), second(), day(), month(), year(), Hari[weekday() - 1]);
     Serial.print("Debit air: ");
