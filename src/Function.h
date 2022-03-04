@@ -152,7 +152,7 @@ void BlynkFunction()
   Blynk.virtualWrite(V2, BakCadangan.levelBak);
   Blynk.virtualWrite(V3, pembaca.total / 1000.0);
   Blynk.virtualWrite(V7, debit);
-  Blynk.virtualWrite(V8, 23);
+  Blynk.virtualWrite(V8, suhu);
 }
 
 void longClick()
@@ -172,6 +172,7 @@ void multiClick()
   if (button.getNumberClicks() == 3)
   {
     clickable = !clickable;
+    myWaktu = millis();
   }
 }
 
@@ -363,10 +364,10 @@ void mulai_record()
 
 void printLCD_info()
 {
-  static unsigned long waktu = 0;
-  if (millis() - waktu >= 1000)
+  static unsigned long waktu__ = 0;
+  if (millis() - waktu__ >= 1000)
   {
-    waktu = millis();
+    waktu__ = millis();
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.printf("Bak1 |Bak2 |Bak3");
@@ -383,19 +384,23 @@ void printLCD_info()
 
 void printLCD_waktu()
 {
-  static unsigned long waktu = 0;
+  static unsigned long waktu_ = 0;
   static bool ticker = true;
-  if (millis() - waktu >= 1000)
+  if (millis() - waktu_ >= 1000)
   {
+    lcd.setCursor(0, 0);
     lcd.clear();
     if (ticker)
     {
-      lcd.printf("%2d:%2d", hour(), minute());
+      lcd.printf("%d:%d", hour(), minute());
     }
     else
     {
-      lcd.printf("%2d %2d", hour(), minute());
+      lcd.printf("%d %d", hour(), minute());
     }
-    waktu = millis();
+    lcd.setCursor(0, 1);
+    lcd.printf("%s %d/%d/%d", String(Hari[weekday() - 1]), day(), month(), year());
+    ticker = !ticker;
+    waktu_ = millis();
   }
 }

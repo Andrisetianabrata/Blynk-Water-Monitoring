@@ -61,22 +61,19 @@ void Task_Two(void *pvParameters)
       attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
     }
 
-    static unsigned long waktu = 0;
-    if(millis() - waktu >= 20000)
+    if(millis() - myWaktu >= 10000)
     {
+      myWaktu = millis();
       clickable = !clickable;
-      waktu = millis();
     }
 
     if(clickable)
     {
       printLCD_info();
-      waktu = millis();
     }else{
       printLCD_waktu();
-      waktu = millis();
     }
-
+    
     button.tick();
     mulai_record();
     vTaskDelay(1 / portTICK_PERIOD_MS);

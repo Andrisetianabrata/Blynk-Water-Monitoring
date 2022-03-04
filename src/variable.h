@@ -61,7 +61,7 @@ bool selenoid2;
 bool BlynkSelenoidState;
 bool emergencyStop;
 
-char Hari[7][12] = {"Miggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"};
+char Hari[7][12] = {"Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"};
 
 OneWire oneWire(TemperatureSensor);
 DallasTemperature sensorTemp(&oneWire);
@@ -100,3 +100,4 @@ public:
 
 LiquidCrystal_I2C lcd(0x27,16,2);
 bool clickable = true;
+static unsigned long myWaktu = 0;
