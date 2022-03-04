@@ -126,7 +126,7 @@ void eventKamarMandi()
 void BlynkFunction()
 {
   sensorTemp.requestTemperatures();
-  float suhu = sensorTemp.getTempCByIndex(0);
+  suhu = sensorTemp.getTempCByIndex(0);
   eventKamarMandi();
 
   if (selenoid)
@@ -171,7 +171,8 @@ void multiClick()
 {
   if (button.getNumberClicks() == 3)
   {
-    clickable = !clickable;
+    clickable ++;
+    if(clickable > 2) clickable = 0;
     myWaktu = millis();
   }
 }
@@ -398,9 +399,24 @@ void printLCD_waktu()
     {
       lcd.printf("%d %d", hour(), minute());
     }
+    lcd.printf("  Suhu: %dc", int(suhu));
     lcd.setCursor(0, 1);
     lcd.printf("%s %d/%d/%d", String(Hari[weekday() - 1]), day(), month(), year());
     ticker = !ticker;
     waktu_ = millis();
+  }
+}
+
+void printDebit()
+{
+  static unsigned long waktu___ = 0;
+  if (millis() - waktu___ >= 1000)
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.printf("Debit: %dL/m", int(debit));
+    lcd.setCursor(0,1);
+    lcd.printf("Total: %dL", int(pembaca.total / 1000));
+    waktu___ = millis();
   }
 }

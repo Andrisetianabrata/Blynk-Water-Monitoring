@@ -64,16 +64,19 @@ void Task_Two(void *pvParameters)
     if(millis() - myWaktu >= 10000)
     {
       myWaktu = millis();
-      clickable = !clickable;
+      clickable ++;
+      if(clickable > 2) clickable = 0;
     }
 
-    if(clickable)
+    if(clickable == 0)
     {
       printLCD_info();
-    }else{
+    }else if(clickable == 1){
       printLCD_waktu();
+    }else if(clickable == 2){
+      printDebit();
     }
-    
+
     button.tick();
     mulai_record();
     vTaskDelay(1 / portTICK_PERIOD_MS);
