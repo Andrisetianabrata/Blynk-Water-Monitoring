@@ -52,20 +52,20 @@ void initialize()
 
 void konversi()
 {
-  BakMandi.minimal = 150;   // dalam centimeter
-  BakMandi.maksimal = 20;  // dalam centimeter
+  BakMandi.minimal = 150; // dalam centimeter
+  BakMandi.maksimal = 20; // dalam centimeter
   BakMandi.persenMinimal = 10;
   BakMandi.persenMaksimal = 80;
   BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
 
-  BakUtama.minimal = 70;   // dalam centimeter
-  BakUtama.maksimal = 10;  // dalam centimeter
+  BakUtama.minimal = 70;  // dalam centimeter
+  BakUtama.maksimal = 10; // dalam centimeter
   BakUtama.persenMinimal = 10;
   BakUtama.persenMaksimal = 80;
   BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
 
-  BakCadangan.minimal = 70;   // dalam centimeter
-  BakCadangan.maksimal = 10;  // dalam centimeter
+  BakCadangan.minimal = 70;  // dalam centimeter
+  BakCadangan.maksimal = 10; // dalam centimeter
   BakCadangan.persenMinimal = 10;
   BakCadangan.persenMaksimal = 80;
   BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
@@ -75,7 +75,7 @@ void eventKamarMandi()
 {
   konversi();
   rainTriger = digitalRead(Rainsensor);
-  
+
   if (BakMandi.levelBak > 0 && BakMandi.levelBak < BakMandi.persenMaksimal && selenoid)
   {
     Blynk.notify("Bak Mandi Telah Terisi PENUH!"); // nyalakan notifikasi
@@ -146,7 +146,7 @@ void BlynkFunction()
   {
     sensorHujan.off();
   }
-  
+
   Blynk.virtualWrite(V0, BakMandi.levelBak);
   Blynk.virtualWrite(V1, BakUtama.levelBak);
   Blynk.virtualWrite(V2, BakCadangan.levelBak);
@@ -165,6 +165,14 @@ void singgelClick()
 {
   BlynkSelenoidState = !BlynkSelenoidState;
   Blynk.virtualWrite(V4, BlynkSelenoidState);
+}
+
+void multiClick()
+{
+  if (button.getNumberClicks() == 3)
+  {
+    clickable = !clickable;
+  }
 }
 
 void IRAM_ATTR pulseCounter()
@@ -303,8 +311,8 @@ void mulai_record()
     // pembaca.total = 0
     idIndex = 7;
   }
-  
-  if(millis() - tampilanMillis >= 1000)
+
+  if (millis() - tampilanMillis >= 1000)
   {
     tampilanMillis = millis();
     Serial.printf("Level Bak: %d\nSelenoid: %d\nEmergency: %d\nSuhu: %d\nDebit: %d\nVolume: %d\n", BakMandi.levelBak, mulaiJam, emergencyStop, 24, flowmlt, pembaca.total);
@@ -350,5 +358,44 @@ void mulai_record()
     Serial.println(output);
     file.close();
     pembaca.total = 0;
+  }
+}
+
+void printLCD_info()
+{
+  static unsigned long waktu = 0;
+  if (millis() - waktu >= 1000)
+  {
+    waktu = millis();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.printf("Bak1 |Bak2 |Bak3");
+    lcd.setCursor(0, 1);
+    lcd.print(String(BakMandi.levelBak) + "%");
+    lcd.setCursor(4, 1);
+    lcd.print(" |");
+    lcd.print(String(BakUtama.levelBak) + "%");
+    lcd.setCursor(10, 1);
+    lcd.print(" |");
+    lcd.print(String(BakCadangan.levelBak) + "%");
+  }
+}
+
+void printLCD_waktu()
+{
+  static unsigned long waktu = 0;
+  static bool ticker = true;
+  if (millis() - waktu >= 1000)
+  {
+    lcd.clear();
+    if (ticker)
+    {
+      lcd.printf("%2d:%2d", hour(), minute());
+    }
+    else
+    {
+      lcd.printf("%2d %2d", hour(), minute());
+    }
+    waktu = millis();
   }
 }

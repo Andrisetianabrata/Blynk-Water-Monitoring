@@ -55,8 +55,6 @@ char server[] = "iot.serangkota.go.id";
 
 bool rainTriger = false;
 
-// int levelPnmpngn;
-// int levelBakMandi;
 bool selenoid;
 bool selenoid1;
 bool selenoid2;
@@ -99,3 +97,6 @@ public:
     return distance;
   }
 } BakMandi, BakUtama, BakCadangan;
+
+LiquidCrystal_I2C lcd(0x27,16,2);
+bool clickable = true;

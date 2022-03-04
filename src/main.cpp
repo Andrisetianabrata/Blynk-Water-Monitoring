@@ -30,10 +30,13 @@ void Task_Two(void *pvParameters)
   oldTime = 0;
 
   attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
-  
+
   button.attachClick(singgelClick);
   button.setPressTicks(1000);
   button.attachLongPressStart(longClick);
+  button.attachMultiClick(multiClick);
+  lcd.init();
+  lcd.backlight();
   for (;;)
   {
     if ((millis() - oldTime) > 1000)
@@ -57,6 +60,23 @@ void Task_Two(void *pvParameters)
 
       attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
     }
+
+    static unsigned long waktu = 0;
+    if(millis() - waktu >= 20000)
+    {
+      clickable = !clickable;
+      waktu = millis();
+    }
+
+    if(clickable)
+    {
+      printLCD_info();
+      waktu = millis();
+    }else{
+      printLCD_waktu();
+      waktu = millis();
+    }
+
     button.tick();
     mulai_record();
     vTaskDelay(1 / portTICK_PERIOD_MS);
