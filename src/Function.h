@@ -50,7 +50,7 @@ void initialize()
   seting_ultrasonic(ultrasonic3.trig, ultrasonic3.echo);
 }
 
-float tulisUltrasonic(byte triger, byte echo)
+int penghitung(byte triger, byte echo)
 {
   digitalWrite(triger, LOW);
   delayMicroseconds(2);
@@ -65,10 +65,11 @@ float tulisUltrasonic(byte triger, byte echo)
 
 void eventKamarMandi()
 {
-  // ButtonState = digitalRead(ButtonSelenoid);
-  levelPnmpngn = 70;
-  levelBakMandi = tulisUltrasonic(ultrasonic1.trig, ultrasonic1.echo);
-
+  BakMandi.minimal = 70; // dalam persen
+  BakMandi.maksimal = 10; // dalam persen
+  BakMandi.levelBak = BakMandi.penghitung(ultrasonic1.trig, ultrasonic1.echo);
+  
+  rainTriger = digitalRead(Rainsensor);
   if (levelBakMandi > 3 && levelBakMandi < 20 && selenoid)
   {
     Blynk.notify("Bak Mandi Telah Terisi PENUH!");
@@ -76,7 +77,7 @@ void eventKamarMandi()
 
   if (!emergencyStop)
   {
-    if (levelPnmpngn < 80 && (levelBakMandi > 80 && levelBakMandi < 500) && !rainTriger)
+    if (BakUtama.levelBak < 80 && (BakMandi.levelBak > 80 && BakMandi.levelBak < 500) && !rainTriger)
     {
       selenoid1 = true;
     }
@@ -136,21 +137,6 @@ void BlynkFunction()
   Blynk.virtualWrite(V3, pembaca.total / 1000.0);
   Blynk.virtualWrite(V7, debit);
   Blynk.virtualWrite(V8, 23);
-  // Serial.printf("Level Bak: %d\nSelenoid: %d\nEmergency: %d\nSuhu: %d\nDebit: %d\nVolume: %d\n", levelBakMandi, selenoid, emergencyStop, suhu, flowmlt, pembaca.total);
-  // Serial.printf("Blynk Selenoid: %d\n", BlynkSelenoidState);
-  // Serial.printf("jam: %2d:%2d:%2d Tanggal: %d/%d/%d Hari: %s\n\n", hour(), minute(), second(), day(), month(), year(), Hari[weekday() - 1]);
-  // Serial.print("Debit air: ");
-  // Serial.print(int(debit));
-  // Serial.print("L/min");
-  // Serial.print("\t");
-
-  // Serial.print("Volume: ");
-  // Serial.print(pembaca.total);
-  // Serial.println("mL");
-
-  // Serial.print("1 minggu: ");
-  // Serial.print(satuminggu.total);
-  // Serial.println("mL");
 }
 
 void longClick()
@@ -315,7 +301,7 @@ void mulai_record()
     Serial.println("mL");
   }
 
-  if (hour() == 13 && minute() == 27 && second() == 59)
+  if (hour() == 23 && minute() == 59 && second() == 59)
   {
     mulaiJam = 1;
   }

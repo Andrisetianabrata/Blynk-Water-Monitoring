@@ -11,7 +11,6 @@ void Task_One(void *pvParameters)
   Blynk.begin(auth, ssid, pass, server, 8080);
   setSyncInterval(10 * 60);
   timer.setInterval(1000, BlynkFunction);
-  // timer.setInterval(100, mulai_record);
   Serial.println("");
   for (;;)
   {

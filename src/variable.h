@@ -31,12 +31,6 @@ BLYNK_ATTACH_WIDGET(table, V9);
 TaskHandle_t Task1;
 TaskHandle_t Task2;
 
-struct ultrasonic
-{
-public:
-  byte echo;
-  byte trig;
-} ultrasonic1, ultrasonic2, ultrasonic3;
 long duration;
 float distance;
 
@@ -72,9 +66,19 @@ char Hari[7][12] = {"Miggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu
 OneWire oneWire(TemperatureSensor);
 DallasTemperature sensorTemp(&oneWire);
 
-OneButton button(ButtonSelenoid, false);
+OneButton button(ButtonSelenoid, true, true);
 
 File file;
 
 bool mulaiJam;
 unsigned long tampilanMillis = 0;
+
+struct levelAir
+{
+  int minimal;
+  int maksimal;
+  int levelBak;
+  byte echo;
+  byte trig;
+  int penghitung(byte triger, byte echo);
+}BakMandi, BakUtama, BakCadangan;
