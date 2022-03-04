@@ -77,10 +77,23 @@ unsigned long tampilanMillis = 0;
 
 struct levelAir
 {
+public:
   int minimal;
   int maksimal;
   int levelBak;
   byte echo;
   byte trig;
-  int penghitung(byte triger, byte echo);
-}BakMandi, BakUtama, BakCadangan;
+
+  uint32_t penghitung(byte triger, byte echo_)
+  {
+    digitalWrite(triger, LOW);
+    delayMicroseconds(2);
+    digitalWrite(triger, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(triger, LOW);
+
+    duration = pulseIn(echo_, HIGH);
+    distance = (duration * 0.0343) / 2;
+    return distance;
+  }
+} BakMandi, BakUtama, BakCadangan;

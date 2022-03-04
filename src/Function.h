@@ -50,18 +50,6 @@ void initialize()
   seting_ultrasonic(BakCadangan.trig, BakCadangan.echo);
 }
 
-int penghitung(byte triger, byte echo)
-{
-  digitalWrite(triger, LOW);
-  delayMicroseconds(2);
-  digitalWrite(triger, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(triger, LOW);
-
-  duration = pulseIn(echo, HIGH);
-  distance = (duration * 0.0343) / 2;
-  return distance;
-}
 
 void eventKamarMandi()
 {
@@ -141,7 +129,7 @@ void BlynkFunction()
     SelenoidLED.off();
   }
 
-  if (rainTriger)
+  if (!rainTriger)
   {
     sensorHujan.on();
   }
