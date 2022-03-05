@@ -263,6 +263,7 @@ void cekFile_dataTotal()
       }
       pembaca.total = doc["total"];
       satuminggu.total = doc["SatuMinggu"];
+      idIndex = doc["index"];
     }
     file.close();
     Serial.println(pembaca.total);
@@ -274,45 +275,107 @@ void mulai_record()
   if (weekday() == 1 && mulaiJam)
   {
     pembaca.minggu = pembaca.total;
-    // pembaca.total = 0
+    satuminggu.total = 0;
     // idIndex = 1;
-    // forTable =
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.minggu;
   }
   else if (weekday() == 2 && mulaiJam)
   {
     pembaca.senin = pembaca.total;
     // pembaca.total = 0
     // idIndex = 2;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.senin;
   }
   else if (weekday() == 3 && mulaiJam)
   {
     pembaca.selasa = pembaca.total;
     // pembaca.total = 0
     // idIndex = 3;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.selasa;
   }
   else if (weekday() == 4 && mulaiJam)
   {
     pembaca.rabu = pembaca.total;
     // pembaca.total = 0
     // idIndex = 4;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.rabu;
   }
   else if (weekday() == 5 && mulaiJam)
   {
     pembaca.kamis = pembaca.total;
     // pembaca.total = 0
     // idIndex = 5;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.kamis;
   }
   else if (weekday() == 6 && mulaiJam)
   {
     pembaca.jumat = pembaca.total;
     // pembaca.total = 0
     // idIndex = 6;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.jumat;
   }
   else if (weekday() == 7 && mulaiJam)
   {
     pembaca.sabtu = pembaca.total;
     // pembaca.total = 0
     // idIndex = 7;
+    forTable = Hari[weekday() - 1];
+    forTable += " ";
+    forTable += String(day());
+    forTable += " ";
+    forTable += String(month());
+    forTable += " ";
+    forTable += String(year());
+    forTable += "=";
+    table_value = pembaca.sabtu;
   }
 
   if (millis() - tampilanMillis >= 1000)
@@ -362,6 +425,7 @@ void mulai_record()
     file.close();
     pembaca.total = 0;
     idIndex++;
+    table.addRow(idIndex, forTable, table_value);
   }
 }
 
