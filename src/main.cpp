@@ -83,6 +83,12 @@ void Task_Two(void *pvParameters)
       printDebit();
     }
 
+    static unsigned long waktuReset = 0;
+    if((millis() - waktuReset >= 10000) && RST)
+    {
+      // Reset semua data
+    }
+
     button.tick();
     mulai_record();
     vTaskDelay(1 / portTICK_PERIOD_MS);

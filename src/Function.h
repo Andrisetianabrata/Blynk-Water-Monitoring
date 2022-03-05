@@ -29,6 +29,12 @@ BLYNK_WRITE(V6)
   emergencyStop = tombol_blynk;
 }
 
+BLYNK_WRITE(V11)
+{
+  int tombol_blynk = param.asInt();
+  RST = tombol_blynk;
+}
+
 void seting_ultrasonic(byte pintrig, byte pinecho)
 {
   pinMode(pintrig, OUTPUT);
@@ -56,19 +62,19 @@ void konversi()
   BakMandi.maksimal = 20; // dalam centimeter
   BakMandi.persenMinimal = 10;
   BakMandi.persenMaksimal = 80;
-  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
   BakUtama.minimal = 70;  // dalam centimeter
   BakUtama.maksimal = 10; // dalam centimeter
   BakUtama.persenMinimal = 10;
   BakUtama.persenMaksimal = 80;
-  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
   BakCadangan.minimal = 70;  // dalam centimeter
   BakCadangan.maksimal = 10; // dalam centimeter
   BakCadangan.persenMinimal = 10;
   BakCadangan.persenMaksimal = 80;
-  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke cm
+  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 }
 
 void eventKamarMandi()

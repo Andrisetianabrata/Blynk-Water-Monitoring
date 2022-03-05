@@ -104,3 +104,4 @@ static unsigned long myWaktu = 0;
 float suhu;
 String forTable;
 long table_value;
+uint8_t RST;
