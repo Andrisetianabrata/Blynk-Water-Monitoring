@@ -29,11 +29,12 @@ BLYNK_WRITE(V6)
   emergencyStop = tombol_blynk;
 }
 
-BLYNK_WRITE(V11)
-{
-  int tombol_blynk = param.asInt();
-  RST = tombol_blynk;
-}
+// BLYNK_WRITE(V11)
+// {
+//   int tombol_blynk = param.asInt();
+//   RST = tombol_blynk;
+//   // if(RST) waktuReset = millis();
+// }
 
 void seting_ultrasonic(byte pintrig, byte pinecho)
 {
@@ -180,6 +181,8 @@ void multiClick()
     clickable ++;
     if(clickable > 2) clickable = 0;
     myWaktu = millis();
+  }else if(button.getNumberClicks() == 10){
+    RST = true;
   }
 }
 

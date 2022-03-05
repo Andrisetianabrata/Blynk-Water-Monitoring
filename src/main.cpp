@@ -28,7 +28,7 @@ void Task_Two(void *pvParameters)
   debit = 0.0;
   flowmlt = 0;
   oldTime = 0;
- 
+
   attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
 
   button.attachClick(singgelClick);
@@ -83,10 +83,19 @@ void Task_Two(void *pvParameters)
       printDebit();
     }
 
-    static unsigned long waktuReset = 0;
-    if((millis() - waktuReset >= 10000) && RST)
+    if (RST)
     {
       // Reset semua data
+      pembaca.minggu = 0;
+      pembaca.senin = 0;
+      pembaca.selasa = 0;
+      pembaca.rabu = 0;
+      pembaca.kamis = 0;
+      pembaca.jumat = 0;
+      pembaca.sabtu = 0;
+      pembaca.total = 0;
+      idIndex = 0;
+      RST = false;
     }
 
     button.tick();

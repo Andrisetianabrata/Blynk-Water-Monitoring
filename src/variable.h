@@ -101,7 +101,8 @@ public:
 LiquidCrystal_I2C lcd(0x27,16,2);
 uint8_t clickable = true;
 static unsigned long myWaktu = 0;
+static unsigned long waktuReset = 0;
 float suhu;
 String forTable;
 long table_value;
-uint8_t RST;
+uint8_t RST = false;
