@@ -28,7 +28,7 @@ void Task_Two(void *pvParameters)
   debit = 0.0;
   flowmlt = 0;
   oldTime = 0;
-
+ 
   attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
 
   button.attachClick(singgelClick);
@@ -42,38 +42,44 @@ void Task_Two(void *pvParameters)
     if ((millis() - oldTime) > 1000)
     {
       detachInterrupt(digitalPinToInterrupt(flowsensor));
-      String output;
-      StaticJsonDocument<120> doc;
       debit = ((1000.0 / (millis() - oldTime)) * pulseCount) / konstanta;
       oldTime = millis();
       flowmlt = (debit / 60) * 1000.0;
       pembaca.total += flowmlt;
       satuminggu.total += flowmlt;
+
+      attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
+    }
+
+    if (millis() - myWaktu >= 10000)
+    {
+      String output;
+      StaticJsonDocument<120> doc;
       doc["total"] = pembaca.total;
       doc["SatuMinggu"] = satuminggu.total;
+      doc["index"] = idIndex;
       pulseCount = 0;
 
       serializeJson(doc, output);
       file = LITTLEFS.open(path, FILE_WRITE);
       file.print(output);
       file.close();
-
-      attachInterrupt(digitalPinToInterrupt(flowsensor), pulseCounter, FALLING);
-    }
-
-    if(millis() - myWaktu >= 10000)
-    {
       myWaktu = millis();
-      clickable ++;
-      if(clickable > 2) clickable = 0;
+      clickable++;
+      if (clickable > 2)
+        clickable = 0;
     }
 
-    if(clickable == 0)
+    if (clickable == 0)
     {
       printLCD_info();
-    }else if(clickable == 1){
+    }
+    else if (clickable == 1)
+    {
       printLCD_waktu();
-    }else if(clickable == 2){
+    }
+    else if (clickable == 2)
+    {
       printDebit();
     }
 

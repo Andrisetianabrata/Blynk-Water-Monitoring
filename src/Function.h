@@ -275,43 +275,44 @@ void mulai_record()
   {
     pembaca.minggu = pembaca.total;
     // pembaca.total = 0
-    idIndex = 1;
+    // idIndex = 1;
+    // forTable =
   }
   else if (weekday() == 2 && mulaiJam)
   {
     pembaca.senin = pembaca.total;
     // pembaca.total = 0
-    idIndex = 2;
+    // idIndex = 2;
   }
   else if (weekday() == 3 && mulaiJam)
   {
     pembaca.selasa = pembaca.total;
     // pembaca.total = 0
-    idIndex = 3;
+    // idIndex = 3;
   }
   else if (weekday() == 4 && mulaiJam)
   {
     pembaca.rabu = pembaca.total;
     // pembaca.total = 0
-    idIndex = 4;
+    // idIndex = 4;
   }
   else if (weekday() == 5 && mulaiJam)
   {
     pembaca.kamis = pembaca.total;
     // pembaca.total = 0
-    idIndex = 5;
+    // idIndex = 5;
   }
   else if (weekday() == 6 && mulaiJam)
   {
     pembaca.jumat = pembaca.total;
     // pembaca.total = 0
-    idIndex = 6;
+    // idIndex = 6;
   }
   else if (weekday() == 7 && mulaiJam)
   {
     pembaca.sabtu = pembaca.total;
     // pembaca.total = 0
-    idIndex = 7;
+    // idIndex = 7;
   }
 
   if (millis() - tampilanMillis >= 1000)
@@ -360,6 +361,7 @@ void mulai_record()
     Serial.println(output);
     file.close();
     pembaca.total = 0;
+    idIndex++;
   }
 }
 

@@ -102,3 +102,4 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 uint8_t clickable = true;
 static unsigned long myWaktu = 0;
 float suhu;
+String forTable; 
