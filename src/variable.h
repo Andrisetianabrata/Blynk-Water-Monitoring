@@ -16,11 +16,11 @@
 #define path_data "/data.json"
 #include "OneButton.h"
 
-const byte Rainsensor = 4;
-const byte ButtonSelenoid = 23;
-const byte TemperatureSensor = 32;
-const byte Selenoid_1 = 16;
-byte flowsensor = 2; // Pin sensor Flow
+const byte Rainsensor = 4;          // PIN
+const byte ButtonSelenoid = 23;     // PIN
+const byte TemperatureSensor = 32;  // PIN
+const byte Selenoid_1 = 16;         // PIN
+const byte flowsensor = 2;          // PIN
 
 BlynkTimer timer;
 WidgetLED SelenoidLED(V5);
@@ -48,7 +48,7 @@ float debit;
 unsigned int flowmlt;
 unsigned long oldTime;
 
-char auth[] = "E7VmvS18KPZnvlPlIBRAIOqCeh_QoOD2";
+char auth[] = "vIMDGajmKf2p51TYRJpnjY3jdM7GqKDQ";
 char ssid[] = "andri";
 char pass[] = "";
 char server[] = "iot.serangkota.go.id";
@@ -101,7 +101,7 @@ public:
 LiquidCrystal_I2C lcd(0x27,16,2);
 uint8_t clickable = true;
 static unsigned long myWaktu = 0;
-static unsigned long waktuReset = 0;
+// static unsigned long waktuReset = 0;
 float suhu;
 String forTable;
 long table_value;

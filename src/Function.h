@@ -44,12 +44,12 @@ void seting_ultrasonic(byte pintrig, byte pinecho)
 
 void initialize()
 {
-  BakMandi.trig = 12;
-  BakMandi.echo = 13;
-  BakUtama.trig = 27;
-  BakUtama.echo = 14;
-  BakCadangan.trig = 25;
-  BakCadangan.echo = 26;
+  BakMandi.trig = 12;     // PIN
+  BakMandi.echo = 13;     // PIN
+  BakUtama.trig = 27;     // PIN
+  BakUtama.echo = 14;     // PIN
+  BakCadangan.trig = 25;  // PIN
+  BakCadangan.echo = 26;  // PIN
   pinMode(Rainsensor, INPUT);
   pinMode(Selenoid_1, OUTPUT);
   seting_ultrasonic(BakMandi.trig, BakMandi.echo);
@@ -63,19 +63,22 @@ void konversi()
   BakMandi.maksimal = 20; // dalam centimeter
   BakMandi.persenMinimal = 10;
   BakMandi.persenMaksimal = 80;
-  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakMandi.levelBak = BakMandi.penghitung(BakMandi.trig, BakMandi.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
   BakUtama.minimal = 70;  // dalam centimeter
   BakUtama.maksimal = 10; // dalam centimeter
   BakUtama.persenMinimal = 10;
   BakUtama.persenMaksimal = 80;
-  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakUtama.levelBak = BakUtama.penghitung(BakUtama.trig, BakUtama.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
   BakCadangan.minimal = 70;  // dalam centimeter
   BakCadangan.maksimal = 10; // dalam centimeter
   BakCadangan.persenMinimal = 10;
   BakCadangan.persenMaksimal = 80;
-  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakCadangan.levelBak = BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 }
 
 void eventKamarMandi()
@@ -90,7 +93,7 @@ void eventKamarMandi()
 
   if (!emergencyStop)
   {
-    if (BakUtama.levelBak > BakUtama.persenMaksimal && (BakMandi.levelBak > BakMandi.persenMinimal && BakMandi.levelBak < BakMandi.persenMaksimal) && !rainTriger)
+    if (BakUtama.levelBak > BakUtama.persenMaksimal && BakMandi.levelBak < 20 && !rainTriger)
     {
       selenoid1 = true;
     }
@@ -390,21 +393,22 @@ void mulai_record()
   if (millis() - tampilanMillis >= 1000)
   {
     tampilanMillis = millis();
-    Serial.printf("Level Bak: %d\nSelenoid: %d\nEmergency: %d\nSuhu: %d\nDebit: %d\nVolume: %d\n", BakMandi.levelBak, mulaiJam, emergencyStop, 24, flowmlt, pembaca.total);
-    Serial.printf("Blynk Selenoid: %d\n", BlynkSelenoidState);
-    Serial.printf("jam: %2d:%2d:%2d Tanggal: %d/%d/%d Hari: %s\n\n", hour(), minute(), second(), day(), month(), year(), Hari[weekday() - 1]);
-    Serial.print("Debit air: ");
+    Serial.printf("Level Bak      : %d%\nBak Cadangan   : %d%\nBak Utama      : %d%\nSelenoid       : %d\nEmergency      : %d\nSuhu           : %d\nDebit          : %d\nVolume         : %dmL\nRaintriger     : %d\n", BakMandi.levelBak, BakCadangan.levelBak, BakUtama.levelBak, selenoid, emergencyStop, 24, flowmlt, pembaca.total, rainTriger);
+    Serial.printf("Blynk Selenoid : %d\n", BlynkSelenoidState);
+    Serial.print("Debit air      : ");
     Serial.print(int(debit));
     Serial.print("L/min");
-    Serial.print("\t");
+    Serial.println("");
 
-    Serial.print("Volume: ");
+    Serial.print("Volume         : ");
     Serial.print(pembaca.total);
     Serial.println("mL");
 
-    Serial.print("1 minggu: ");
+    Serial.print("1 minggu       : ");
     Serial.print(satuminggu.total);
     Serial.println("mL");
+    Serial.printf("jam: %02d:%02d:%02d Tanggal: %02d/%02d/%02d Hari: %s\n", hour(), minute(), second(), day(), month(), year(), Hari[weekday() - 1]);
+    Serial.println("");
   }
 
   if (hour() == 23 && minute() == 59 && second() == 59)
