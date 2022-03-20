@@ -116,15 +116,6 @@ void eventKamarMandi()
     {
       selenoid = false;
     }
-
-    // if (selenoid2 || BlynkSelenoidState)
-    // {
-    //   selenoid = true;
-    // }
-    // else
-    // {
-    //   selenoid = false;
-    // }
   }
   else
   {
