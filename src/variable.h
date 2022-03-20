@@ -19,7 +19,7 @@
 const byte Rainsensor = 4;          // PIN
 const byte ButtonSelenoid = 23;     // PIN
 const byte TemperatureSensor = 32;  // PIN
-const byte Selenoid_1 = 16;         // PIN
+const int Selenoid_1 = 17;          // PIN
 const byte flowsensor = 2;          // PIN
 
 BlynkTimer timer;

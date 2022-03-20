@@ -44,14 +44,15 @@ void seting_ultrasonic(byte pintrig, byte pinecho)
 
 void initialize()
 {
-  BakMandi.trig = 12;     // PIN
-  BakMandi.echo = 13;     // PIN
-  BakUtama.trig = 27;     // PIN
-  BakUtama.echo = 14;     // PIN
-  BakCadangan.trig = 25;  // PIN
-  BakCadangan.echo = 26;  // PIN
+  BakMandi.trig = 12;    // PIN
+  BakMandi.echo = 13;    // PIN
+  BakUtama.trig = 27;    // PIN
+  BakUtama.echo = 14;    // PIN
+  BakCadangan.trig = 25; // PIN
+  BakCadangan.echo = 26; // PIN
   pinMode(Rainsensor, INPUT);
   pinMode(Selenoid_1, OUTPUT);
+  digitalWrite(Selenoid_1, HIGH);
   seting_ultrasonic(BakMandi.trig, BakMandi.echo);
   seting_ultrasonic(BakUtama.trig, BakUtama.echo);
   seting_ultrasonic(BakCadangan.trig, BakCadangan.echo);
@@ -59,26 +60,26 @@ void initialize()
 
 void konversi()
 {
-  BakMandi.minimal = 150; // dalam centimeter
-  BakMandi.maksimal = 20; // dalam centimeter
+  BakMandi.minimal = 60;  // dalam centimeter
+  BakMandi.maksimal = 15; // dalam centimeter
   BakMandi.persenMinimal = 10;
   BakMandi.persenMaksimal = 80;
-  // BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
-  BakMandi.levelBak = BakMandi.penghitung(BakMandi.trig, BakMandi.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakMandi.levelBak = BakMandi.penghitung(BakMandi.trig, BakMandi.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
-  BakUtama.minimal = 70;  // dalam centimeter
-  BakUtama.maksimal = 10; // dalam centimeter
+  BakUtama.minimal = 60;  // dalam centimeter
+  BakUtama.maksimal = 15; // dalam centimeter
   BakUtama.persenMinimal = 10;
   BakUtama.persenMaksimal = 80;
-  // BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
-  BakUtama.levelBak = BakUtama.penghitung(BakUtama.trig, BakUtama.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakUtama.levelBak = BakUtama.penghitung(BakUtama.trig, BakUtama.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
-  BakCadangan.minimal = 70;  // dalam centimeter
-  BakCadangan.maksimal = 10; // dalam centimeter
+  BakCadangan.minimal = 60;  // dalam centimeter
+  BakCadangan.maksimal = 15; // dalam centimeter
   BakCadangan.persenMinimal = 10;
   BakCadangan.persenMaksimal = 80;
-  // BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
-  BakCadangan.levelBak = BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
+  // BakCadangan.levelBak = BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 }
 
 void eventKamarMandi()
@@ -93,37 +94,37 @@ void eventKamarMandi()
 
   if (!emergencyStop)
   {
-    if (BakUtama.levelBak > BakUtama.persenMaksimal && BakMandi.levelBak < 20 && !rainTriger)
+    if (BakUtama.levelBak > 80 && BakMandi.levelBak < 20 && !rainTriger)
     {
       selenoid1 = true;
     }
-    else if (BakMandi.levelBak < BakMandi.persenMinimal)
+    else if (BakMandi.levelBak > 80)
     {
-      selenoid1 = false;
       if (BlynkSelenoidState)
       {
+        BlynkSelenoidState = false;
         Blynk.virtualWrite(V4, 0);
-        BlynkSelenoidState = 0;
       }
+      selenoid1 = false;
     }
 
-    if (selenoid1)
-    {
-      selenoid2 = true;
-    }
-    else if (!selenoid1)
-    {
-      selenoid2 = !true;
-    }
-
-    if (selenoid2 || BlynkSelenoidState)
+    if (selenoid1 || BlynkSelenoidState)
     {
       selenoid = true;
     }
-    else if (!selenoid2)
+    else
     {
-      selenoid = !true;
+      selenoid = false;
     }
+
+    // if (selenoid2 || BlynkSelenoidState)
+    // {
+    //   selenoid = true;
+    // }
+    // else
+    // {
+    //   selenoid = false;
+    // }
   }
   else
   {
@@ -163,6 +164,7 @@ void BlynkFunction()
   Blynk.virtualWrite(V3, pembaca.total / 1000.0);
   Blynk.virtualWrite(V7, debit);
   Blynk.virtualWrite(V8, suhu);
+  digitalWrite(Selenoid_1, !selenoid);
 }
 
 void longClick()
@@ -181,10 +183,13 @@ void multiClick()
 {
   if (button.getNumberClicks() == 3)
   {
-    clickable ++;
-    if(clickable > 2) clickable = 0;
+    clickable++;
+    if (clickable > 2)
+      clickable = 0;
     myWaktu = millis();
-  }else if(button.getNumberClicks() == 10){
+  }
+  else if (button.getNumberClicks() == 10)
+  {
     RST = true;
   }
 }
@@ -492,9 +497,9 @@ void printDebit()
   if (millis() - waktu___ >= 1000)
   {
     lcd.clear();
-    lcd.setCursor(0,0);
+    lcd.setCursor(0, 0);
     lcd.printf("Debit: %dL/m", int(debit));
-    lcd.setCursor(0,1);
+    lcd.setCursor(0, 1);
     lcd.printf("Total: %dL", int(pembaca.total / 1000));
     waktu___ = millis();
   }
