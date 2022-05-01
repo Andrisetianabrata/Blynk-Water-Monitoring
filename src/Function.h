@@ -60,22 +60,22 @@ void initialize()
 
 void konversi()
 {
-  BakMandi.minimal = 60;  // dalam centimeter
-  BakMandi.maksimal = 15; // dalam centimeter
+  BakMandi.minimal = 92;  // dalam centimeter
+  BakMandi.maksimal = 6; // dalam centimeter
   BakMandi.persenMinimal = 10;
   BakMandi.persenMaksimal = 80;
   BakMandi.levelBak = map(BakMandi.penghitung(BakMandi.trig, BakMandi.echo), BakMandi.minimal, BakMandi.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
   // BakMandi.levelBak = BakMandi.penghitung(BakMandi.trig, BakMandi.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
-  BakUtama.minimal = 60;  // dalam centimeter
-  BakUtama.maksimal = 15; // dalam centimeter
+  BakUtama.minimal = 126;  // dalam centimeter
+  BakUtama.maksimal = 7; // dalam centimeter
   BakUtama.persenMinimal = 10;
   BakUtama.persenMaksimal = 80;
   BakUtama.levelBak = map(BakUtama.penghitung(BakUtama.trig, BakUtama.echo), BakUtama.minimal, BakUtama.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
   // BakUtama.levelBak = BakUtama.penghitung(BakUtama.trig, BakUtama.echo); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
 
-  BakCadangan.minimal = 60;  // dalam centimeter
-  BakCadangan.maksimal = 15; // dalam centimeter
+  BakCadangan.minimal = 156;  // dalam centimeter
+  BakCadangan.maksimal = 7; // dalam centimeter
   BakCadangan.persenMinimal = 10;
   BakCadangan.persenMaksimal = 80;
   BakCadangan.levelBak = map(BakCadangan.penghitung(BakCadangan.trig, BakCadangan.echo), BakCadangan.minimal, BakCadangan.maksimal, 0, 100); // konversi dari nilai minimal - nilai maksimal ke 0 - 100 memungkinkan untuk mengubah ke persentase
@@ -155,7 +155,7 @@ void BlynkFunction()
   Blynk.virtualWrite(V3, pembaca.total / 1000.0);
   Blynk.virtualWrite(V7, debit);
   Blynk.virtualWrite(V8, suhu);
-  digitalWrite(Selenoid_1, !selenoid);
+  digitalWrite(Selenoid_1, selenoid);
 }
 
 void longClick()
@@ -407,7 +407,7 @@ void mulai_record()
     Serial.println("");
   }
 
-  if (hour() == 23 && minute() == 59 && second() == 59)
+  if (hour() >= 22 && hour() <= 23)
   {
     mulaiJam = 1;
   }

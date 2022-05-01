@@ -12,10 +12,18 @@ void Task_One(void *pvParameters)
   setSyncInterval(10 * 60);
   timer.setInterval(1000, BlynkFunction);
   Serial.println("");
+  config.api_key = API_KEY;
+  config.database_url = DATABASE_URL;
+  Firebase.begin(DATABASE_URL, API_KEY);
+  // Firebase.setDoubleDigits(5);
   for (;;)
   {
     Blynk.run();
     timer.run();
+    if(Firebase.ready())
+    {
+      Firebase.setInt(fbdo, forTable, pembaca.total);
+    }
   }
 }
 

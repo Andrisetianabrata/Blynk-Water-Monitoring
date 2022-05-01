@@ -48,7 +48,7 @@ float debit;
 unsigned int flowmlt;
 unsigned long oldTime;
 
-char auth[] = "vIMDGajmKf2p51TYRJpnjY3jdM7GqKDQ";
+char auth[] = "FntS01cpiuSbuoyIJiaKwp7Qeo5v9Ta4";
 char ssid[] = "andri";
 char pass[] = "";
 char server[] = "iot.serangkota.go.id";
@@ -106,3 +106,12 @@ float suhu;
 String forTable;
 long table_value;
 uint8_t RST = false;
+
+#include <FirebaseESP32.h>
+#include <addons/TokenHelper.h>
+#include <addons/RTDBHelper.h>
+#define API_KEY "mgnWCN2w9cmsyFUB9fryNi7nqkKHdERaMkYSV4aA"
+#define DATABASE_URL "https://esp32-dac6d-default-rtdb.firebaseio.com/" //<databaseName>.firebaseio.com or <databaseName>.<region>.firebasedatabase.app
+FirebaseData fbdo;
+FirebaseAuth F_auth;
+FirebaseConfig config;
